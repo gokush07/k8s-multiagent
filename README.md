@@ -8,13 +8,36 @@ This repository provisions a local Kubernetes lab on Docker Desktop using kind, 
 - PostgreSQL
 - a lightweight Spring Boot Java app with a web UI, DB persistence, Kafka publish/consume, and Prometheus metrics
 
+## System Requirements
+
+Before running the lab, ensure your workstation meets the following minimum resource allocations:
+
+| Resource | Minimum Required | Recommended |
+| :--- | :--- | :--- |
+| **Operating System** | macOS (Intel / Apple Silicon), Linux, Windows (WSL2) | macOS / Linux |
+| **Docker Engine CPUs** | 4 Cores | 6+ Cores |
+| **Docker Engine Memory** | 6 GB RAM | 8 GB+ RAM |
+| **Available Disk Space** | 15 GB Free | 20 GB+ Free |
+
+> [!IMPORTANT]
+> **Docker Desktop Resource Allocation**: In Docker Desktop Settings -> Resources, ensure at least **6 GB RAM** and **4 CPUs** are assigned.
+
 ## Prerequisites
 
-- Docker Desktop with the Docker engine running
-- kind
-- kubectl
-- helm
-- Java 21 + Maven (only needed to rebuild the app image)
+The following CLI tools must be installed and available on your system `$PATH`:
+
+1. **Docker Desktop** (with Docker Engine up and running)
+2. **kind** (`v0.20.0+`) - Kubernetes in Docker
+3. **kubectl** (`v1.27+`) - Kubernetes CLI
+4. **helm** (`v3.10+`) - Kubernetes Package Manager
+5. **Java 21 JDK & Maven 3.8+** - Required for compiling the Spring Boot app
+6. **curl** - Used by validation scripts
+
+### One-line Installation (macOS via Homebrew)
+
+```bash
+brew install kind kubectl helm openjdk@21 maven
+```
 
 ## Quick start (Single Command)
 
