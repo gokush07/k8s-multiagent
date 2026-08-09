@@ -1,0 +1,145 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-exporter
+  namespace: lab
+  labels:
+    app: kafka-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-exporter
+  template:
+    metadata:
+      labels:
+        app: kafka-exporter
+    spec:
+      containers:
+        - name: kafka-exporter
+          image: danielqsj/kafka-exporter:v1.7.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--kafka.server=kafka.lab.svc:9092"
+          ports:
+            - containerPort: 9308
+              name: metrics
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-exporter
+  namespace: lab
+  labels:
+    app: kafka-exporter
+spec:
+  selector:
+    app: kafka-exporter
+  ports:
+    - name: metrics
+      port: 9308
+      targetPort: 9308
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kafka-exporter
+  namespace: lab
+  labels:
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: kafka-exporter
+  endpoints:
+    - port: metrics
+      interval: 15s
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-grafana-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  kafka-dashboard.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Kafka Active Brokers",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "id": 1,
+          "targets": [
+            { "expr": "kafka_brokers", "legendFormat": "Active Brokers" }
+          ]
+        },
+        {
+          "type": "stat",
+          "title": "Total Topics",
+          "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+          "id": 2,
+          "targets": [
+            { "expr": "count(count by (topic) (kafka_topic_partitions))", "legendFormat": "Topics" }
+          ]
+        },
+        {
+          "type": "stat",
+          "title": "Kafka Consumer Lag (Total)",
+          "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+          "id": 3,
+          "targets": [
+            { "expr": "sum(kafka_consumergroup_lag)", "legendFormat": "Total Lag" }
+          ]
+        },
+        {
+          "type": "stat",
+          "title": "Consumer Groups Count",
+          "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+          "id": 4,
+          "targets": [
+            { "expr": "count(count by (consumergroup) (kafka_consumergroup_current_offset))", "legendFormat": "Groups" }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "Consumer Group Lag per Topic",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+          "id": 5,
+          "targets": [
+            { "expr": "sum by (consumergroup, topic) (kafka_consumergroup_lag)", "legendFormat": "{{consumergroup}} - {{topic}}" }
+          ]
+        },
+        {
+          "type": "timeseries",
+          "title": "Kafka Topic Messages Offset Rate",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+          "id": 6,
+          "targets": [
+            { "expr": "sum by (topic) (rate(kafka_topic_partition_current_offset[1m]))", "legendFormat": "{{topic}} msg/s" }
+          ]
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["kafka", "messaging", "lab"],
+      "time": { "from": "now-15m", "to": "now" },
+      "title": "Kafka Overview & Consumer Lag",
+      "uid": "kafka-overview-dashboard"
+    }

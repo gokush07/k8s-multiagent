@@ -1,0 +1,7 @@
+package com.example.lab.repository;
+
+import com.example.lab.model.MessageEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MessageRepository extends JpaRepository<MessageEntity, Long> {
+}

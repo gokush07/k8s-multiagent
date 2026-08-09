@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Lab App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        form { margin-bottom: 1rem; }
+        input[type=text] { width: 320px; padding: 0.5rem; }
+        button { padding: 0.5rem 1rem; }
+        .card { border: 1px solid #ccc; border-radius: 6px; padding: 1rem; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <h1>Lab Application</h1>
+    <p>Submit a message to persist it in PostgreSQL and publish it to Kafka.</p>
+    <form action="/messages" method="post">
+        <input type="text" name="text" placeholder="Enter a message" required />
+        <button type="submit">Send</button>
+    </form>
+    <h2>Recent messages</h2>
+    <div th:each="message : ${messages}" class="card">
+        <div th:text="${message.text}"></div>
+        <small th:text="${message.createdAt}"></small>
+    </div>
+</body>
+</html>
