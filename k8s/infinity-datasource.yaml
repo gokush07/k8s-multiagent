@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infinity-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: "1"
+data:
+  infinity-datasource.yaml: |-
+    apiVersion: 1
+    datasources:
+      - name: Infinity
+        type: yesoreyeram-infinity-datasource
+        uid: infinity
+        access: proxy
+        isDefault: false
+        jsonData:
+          allowedHosts:
+            - "http://lab-app.lab.svc"
+            - "http://lab-app.lab.svc:80"
+            - "http://lab-app.lab.svc:8080"

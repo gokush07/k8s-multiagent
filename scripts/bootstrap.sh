@@ -49,6 +49,7 @@ kubectl apply -f k8s/app/servicemonitor.yaml >/dev/null
 kubectl apply -f k8s/app/deployment.yaml >/dev/null
 kubectl apply -f k8s/app/ingress.yaml >/dev/null
 kubectl apply -f k8s/sharepoint-grafana-dashboard.yaml >/dev/null
+kubectl apply -f k8s/infinity-datasource.yaml >/dev/null
 
 # 4. Build and load Java Application image
 echo "[4/6] Building Java app and loading into cluster..."

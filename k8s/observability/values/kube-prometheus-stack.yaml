@@ -1,5 +1,18 @@
 grafana:
   adminPassword: admin
+  plugins:
+    - yesoreyeram-infinity-datasource
+  additionalDataSources:
+    - name: Infinity
+      type: yesoreyeram-infinity-datasource
+      uid: infinity
+      access: proxy
+      isDefault: false
+      jsonData:
+        allowedHosts:
+          - "http://lab-app.lab.svc"
+          - "http://lab-app.lab.svc:80"
+          - "http://lab-app.lab.svc:8080"
   service:
     type: NodePort
     nodePort: 30000
