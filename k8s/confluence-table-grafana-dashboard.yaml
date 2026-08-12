@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: confluence-table-grafana-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  confluence-table-dashboard.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Confluence Pages & Tables Created",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "id": 1,
+          "targets": [
+            {
+              "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "infinity" },
+              "type": "json",
+              "parser": "backend",
+              "source": "url",
+              "url": "http://lab-app.lab.svc/api/confluence/table-data",
+              "root_selector": "d.results",
+              "columns": []
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["count"] }
+          }
+        },
+        {
+          "type": "table",
+          "title": "Live Confluence Pages & Data Tables Stream",
+          "gridPos": { "h": 12, "w": 24, "x": 0, "y": 4 },
+          "id": 2,
+          "targets": [
+            {
+              "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "infinity" },
+              "type": "json",
+              "parser": "backend",
+              "source": "url",
+              "url": "http://lab-app.lab.svc/api/confluence/table-data",
+              "root_selector": "d.results",
+              "columns": [
+                { "selector": "ID", "text": "Page ID", "type": "number" },
+                { "selector": "Title", "text": "Page Title", "type": "string" },
+                { "selector": "Category", "text": "Category", "type": "string" },
+                { "selector": "Status", "text": "Status", "type": "string" },
+                { "selector": "TableData", "text": "Embedded Table Data JSON", "type": "string" },
+                { "selector": "UpdatedAt", "text": "Last Modified", "type": "timestamp" }
+              ]
+            }
+          ]
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["confluence", "table", "lab"],
+      "time": { "from": "now-1h", "to": "now" },
+      "title": "Confluence User Data Tables Stream",
+      "uid": "confluence-user-tables-stream"
+    }
