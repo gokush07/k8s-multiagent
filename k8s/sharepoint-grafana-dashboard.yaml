@@ -27,7 +27,7 @@ data:
               "type": "json",
               "parser": "backend",
               "source": "url",
-              "url": "http://lab-app.lab.svc:8080/api/sharepoint/items",
+              "url": "http://lab-app.lab.svc/api/sharepoint/items",
               "root_selector": "d.results",
               "columns": []
             }
@@ -47,7 +47,7 @@ data:
               "type": "json",
               "parser": "backend",
               "source": "url",
-              "url": "http://lab-app.lab.svc:8080/api/sharepoint/items",
+              "url": "http://lab-app.lab.svc/api/sharepoint/items",
               "root_selector": "d.results",
               "columns": [
                 { "selector": "ID", "text": "ID", "type": "number" },
