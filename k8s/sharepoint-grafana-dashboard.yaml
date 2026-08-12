@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sharepoint-grafana-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  sharepoint-dashboard.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "liveNow": false,
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Total SharePoint List Items",
+          "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "id": 1,
+          "targets": [
+            {
+              "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "infinity" },
+              "type": "json",
+              "parser": "backend",
+              "source": "url",
+              "url": "http://lab-app.lab.svc:8080/api/sharepoint/items",
+              "root_selector": "d.results",
+              "columns": []
+            }
+          ],
+          "options": {
+            "reduceOptions": { "calcs": ["count"] }
+          }
+        },
+        {
+          "type": "table",
+          "title": "SharePoint Incidents & Tasks List",
+          "gridPos": { "h": 12, "w": 24, "x": 0, "y": 4 },
+          "id": 2,
+          "targets": [
+            {
+              "datasource": { "type": "yesoreyeram-infinity-datasource", "uid": "infinity" },
+              "type": "json",
+              "parser": "backend",
+              "source": "url",
+              "url": "http://lab-app.lab.svc:8080/api/sharepoint/items",
+              "root_selector": "d.results",
+              "columns": [
+                { "selector": "ID", "text": "ID", "type": "number" },
+                { "selector": "Title", "text": "Title", "type": "string" },
+                { "selector": "Status", "text": "Status", "type": "string" },
+                { "selector": "Priority", "text": "Priority", "type": "string" },
+                { "selector": "Category", "text": "Category", "type": "string" },
+                { "selector": "AssignedTo", "text": "Assigned To", "type": "string" },
+                { "selector": "Created", "text": "Created Date", "type": "timestamp" }
+              ]
+            }
+          ],
+          "fieldConfig": {
+            "defaults": {},
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Status" },
+                "properties": [
+                  {
+                    "id": "custom.cellOptions",
+                    "value": { "type": "color-background" }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      { "type": "value", "options": { "Critical": { "color": "red", "text": "Critical" }, "In Progress": { "color": "orange", "text": "In Progress" }, "Resolved": { "color": "green", "text": "Resolved" }, "Open": { "color": "blue", "text": "Open" } } }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "refresh": "10s",
+      "schemaVersion": 38,
+      "style": "dark",
+      "tags": ["sharepoint", "table", "lab"],
+      "time": { "from": "now-1h", "to": "now" },
+      "title": "SharePoint List Data (Mocked)",
+      "uid": "sharepoint-list-dashboard"
+    }
