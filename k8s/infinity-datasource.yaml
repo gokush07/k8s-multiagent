@@ -15,7 +15,4 @@ data:
         access: proxy
         isDefault: false
         jsonData:
-          allowedHosts:
-            - "http://lab-app.lab.svc"
-            - "http://lab-app.lab.svc:80"
-            - "http://lab-app.lab.svc:8080"
+          allowedHosts: []
