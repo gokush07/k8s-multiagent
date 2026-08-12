@@ -61,6 +61,7 @@ The bootstrap script automatically handles the entire end-to-end setup in one co
 
 Once `bootstrap.sh` completes, access your endpoints directly:
 - App UI: http://127.0.0.1:8080/
+- Confluence Portal: http://127.0.0.1:8080/confluence
 - Health endpoint: http://127.0.0.1:8080/health
 - Prometheus: http://127.0.0.1:9090/
 - Grafana: http://127.0.0.1:3000/ (admin/admin)
